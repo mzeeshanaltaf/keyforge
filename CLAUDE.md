@@ -61,7 +61,8 @@ npm test           # Vitest unit tests
 
 The shadcn components use `@base-ui/react`, so the API differs from Radix:
 
-- Button has no `asChild` — use `render={<Link href="..." />}` for links.
+- Button has no `asChild` — use `render={<Link href="..." />}` for links, and
+  pass `nativeButton={false}` so Base UI does not warn about the non-`<button>`.
 - `TooltipProvider` uses `delay`, not `delayDuration`.
 - `Slider` `onValueChange` receives `number | number[]` — normalize with
   `Array.isArray(v) ? v[0] : v`.

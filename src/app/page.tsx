@@ -31,11 +31,16 @@ export default function Home() {
               Crypto API. Generate in bulk, then copy or export to CSV or JSON.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
-              <Button render={<Link href="/uuid" />} size="lg">
+              <Button render={<Link href="/uuid" />} nativeButton={false} size="lg">
                 Start generating
                 <ArrowRightIcon weight="bold" />
               </Button>
-              <Button render={<Link href="/password" />} size="lg" variant="outline">
+              <Button
+                render={<Link href="/password" />}
+                nativeButton={false}
+                size="lg"
+                variant="outline"
+              >
                 Strong passwords
               </Button>
             </div>

@@ -11,11 +11,11 @@ import { generateUuid, type UuidVersion } from "@/lib/generators/uuid";
 
 export function UuidTool() {
   const [version, setVersion] = useState<UuidVersion>("v4");
-  const [count, setCount] = useState(10);
+  const [count, setCount] = useState(5);
   // Seeded lazily on first client render. This island is loaded with
   // `ssr: false`, so calling crypto here cannot cause a hydration mismatch.
   const [values, setValues] = useState<string[]>(() =>
-    Array.from({ length: 10 }, () => generateUuid("v4")),
+    Array.from({ length: 5 }, () => generateUuid("v4")),
   );
 
   const generate = useCallback(() => {

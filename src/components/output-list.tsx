@@ -54,7 +54,7 @@ interface OutputListProps {
 export function OutputList({ values, emptyHint }: OutputListProps) {
   if (values.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center gap-2 rounded-lg border border-dashed border-border px-6 py-14 text-center">
+      <div className="flex min-h-48 flex-1 flex-col items-center justify-center gap-2 rounded-lg border border-dashed border-border px-6 text-center">
         <SparkleIcon size={22} weight="duotone" className="text-muted-foreground" />
         <p className="text-sm text-muted-foreground">
           {emptyHint ?? "Your generated values will appear here."}
@@ -64,7 +64,7 @@ export function OutputList({ values, emptyHint }: OutputListProps) {
   }
 
   return (
-    <ul className="max-h-[28rem] divide-y divide-border/70 overflow-y-auto rounded-lg border border-border bg-card">
+    <ul className="min-h-48 flex-1 divide-y divide-border/70 overflow-y-auto rounded-lg border border-border bg-background">
       {values.map((value, i) => (
         <OutputRow key={`${i}-${value}`} index={i + 1} value={value} />
       ))}

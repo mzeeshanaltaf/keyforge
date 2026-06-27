@@ -51,9 +51,9 @@ export function GuidTool() {
     hyphens: true,
     wrapper: "braces",
   });
-  const [count, setCount] = useState(10);
+  const [count, setCount] = useState(5);
   const [values, setValues] = useState<string[]>(() =>
-    Array.from({ length: 10 }, () =>
+    Array.from({ length: 5 }, () =>
       generateGuid({ uppercase: true, hyphens: true, wrapper: "braces" }),
     ),
   );
