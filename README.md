@@ -1,36 +1,80 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Keyforge
 
-## Getting Started
+A fast, privacy-first generator for **UUIDs, GUIDs, strong passwords, and API keys**.
+Everything is generated locally in your browser with the Web Crypto API. Nothing is
+ever sent to a server.
 
-First, run the development server:
+> Bulk-generate up to 100 values at a time, see live entropy, and copy or export to CSV / JSON.
+
+## Features
+
+- **UUID** — versions **v4** (random) and **v7** (time-ordered, sortable), with a
+  breakdown of the `8-4-4-4-12` structure and version / variant bits.
+- **GUID** — Microsoft-style identifiers with uppercase, hyphen, and brace / parenthesis
+  formatting (standard, registry, and code styles).
+- **Password** — adjustable length (10–50), selectable character classes, an
+  "exclude look-alikes" option, and a **live entropy + strength meter**.
+- **API Key** — custom prefix, fixed lengths (16 / 24 / 32 / 48 / 64), a charset selector,
+  and the **entropy in bits** shown for each length.
+- **Bulk + export** — generate 1–100 at once; copy a single value, copy the whole batch,
+  or download as **CSV** or **JSON**.
+- **Private by design** — generation uses `crypto.getRandomValues` with unbiased
+  (rejection-sampled) selection. No network requests, no logging.
+- Dark / light mode, keyboard-friendly controls, and a responsive layout.
+
+## Tech stack
+
+- [Next.js 16](https://nextjs.org) (App Router) + React 19 + TypeScript
+- [Tailwind CSS v4](https://tailwindcss.com) and [shadcn/ui](https://ui.shadcn.com)
+  (Base UI primitives)
+- [Phosphor Icons](https://phosphoricons.com), [next-themes](https://github.com/pacocoursey/next-themes),
+  [sonner](https://sonner.emilkowal.ski)
+- [Vitest](https://vitest.dev) for unit tests
+
+## Getting started
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
+npm run dev      # http://localhost:3000
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Scripts
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+| Command            | Description                          |
+| ------------------ | ------------------------------------ |
+| `npm run dev`      | Start the dev server                 |
+| `npm run build`    | Production build                     |
+| `npm run start`    | Serve the production build           |
+| `npm run lint`     | Run ESLint                           |
+| `npm test`         | Run the unit test suite (Vitest)     |
+| `npm run test:watch` | Run tests in watch mode            |
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Project structure
 
-## Learn More
+```
+src/
+├── app/                      # Routes: /, /uuid, /guid, /password, /api-key
+├── components/
+│   ├── tools/                # The four tool panels + their ssr:false islands
+│   ├── ui/                   # shadcn/ui primitives
+│   └── *.tsx                 # Shared shell, output list, entropy meter, nav, etc.
+└── lib/
+    ├── generators/           # uuid, guid, password, apiKey (pure functions)
+    ├── random.ts             # Secure randomness helpers (rejection sampling)
+    ├── entropy.ts            # Entropy math + strength buckets
+    └── export.ts             # CSV / JSON / clipboard / download
+```
 
-To learn more about Next.js, take a look at the following resources:
+## How it works
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Each tool is a **client-only island** (loaded with `next/dynamic` and `ssr: false`) that
+seeds its initial values from `crypto` during render. This avoids server/client hydration
+mismatches while keeping the educational content on each page **server-rendered for SEO**.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+All randomness flows through [`src/lib/random.ts`](src/lib/random.ts), which uses rejection
+sampling to avoid modulo bias. The generators are pure and covered by unit tests in
+[`src/lib/generators.test.ts`](src/lib/generators.test.ts).
 
-## Deploy on Vercel
+## License
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+MIT

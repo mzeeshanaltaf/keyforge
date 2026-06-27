@@ -1,65 +1,131 @@
-import Image from "next/image";
+import Link from "next/link";
+import {
+  ArrowRightIcon,
+  ShieldCheckIcon,
+  LightningIcon,
+  DownloadSimpleIcon,
+} from "@phosphor-icons/react/dist/ssr";
+import { Button } from "@/components/ui/button";
+import { TOOLS } from "@/lib/tools";
+
+const SAMPLES: { label: string; value: string }[] = [
+  { label: "UUID v4", value: "9f1c2e7a-4b8d-4c1e-9a2f-7d6e5b4c3a21" },
+  { label: "UUID v7", value: "018f9b2c-1a3e-7c44-b9d0-2f6a8c4e1d05" },
+  { label: "GUID", value: "{B3D4E1A0-7C2F-4E55-9AB1-0C3D2E1F4A6B}" },
+  { label: "Password", value: "rT8$kQ2!vLm9@xZ4pN6w" },
+  { label: "API key", value: "sk_live_4Kp9XbN2mQ7rT1vL8wYz" },
+];
 
 export default function Home() {
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+    <div>
+      {/* Hero: asymmetric split, copy left, real sample output right */}
+      <section className="bg-grid">
+        <div className="mx-auto grid max-w-6xl items-center gap-12 px-4 py-16 sm:px-6 lg:grid-cols-2 lg:py-24">
+          <div>
+            <h1 className="text-balance text-4xl font-semibold tracking-tight sm:text-5xl">
+              Generate keys that never leave your browser.
+            </h1>
+            <p className="mt-5 max-w-md text-lg leading-relaxed text-muted-foreground">
+              UUIDs, GUIDs, strong passwords, and API keys, built with the Web
+              Crypto API. Generate in bulk, then copy or export to CSV or JSON.
+            </p>
+            <div className="mt-8 flex flex-wrap gap-3">
+              <Button render={<Link href="/uuid" />} size="lg">
+                Start generating
+                <ArrowRightIcon weight="bold" />
+              </Button>
+              <Button render={<Link href="/password" />} size="lg" variant="outline">
+                Strong passwords
+              </Button>
+            </div>
+          </div>
+
+          <div className="rounded-2xl border border-border bg-card/70 p-5 shadow-sm backdrop-blur-sm">
+            <p className="mb-4 text-xs font-medium uppercase tracking-wide text-muted-foreground">
+              Sample output
+            </p>
+            <ul className="space-y-3">
+              {SAMPLES.map((s) => (
+                <li key={s.label} className="flex flex-col gap-1">
+                  <span className="text-[11px] text-muted-foreground">{s.label}</span>
+                  <code className="font-key truncate text-sm text-foreground">{s.value}</code>
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+      </section>
+
+      {/* Tool directory: 2x2 bento, four tools, four cells */}
+      <section className="mx-auto max-w-6xl px-4 pb-16 sm:px-6">
+        <div className="grid gap-4 sm:grid-cols-2">
+          {TOOLS.map((tool) => {
+            const Icon = tool.icon;
+            return (
+              <Link
+                key={tool.slug}
+                href={tool.href}
+                className="group flex items-start gap-4 rounded-xl border border-border bg-card p-6 transition-colors hover:border-primary/50 hover:bg-accent/40"
+              >
+                <span className="grid size-11 shrink-0 place-items-center rounded-lg border border-border bg-background text-primary transition-colors group-hover:border-primary/40">
+                  <Icon size={24} weight="duotone" />
+                </span>
+                <div className="min-w-0">
+                  <div className="flex items-center gap-1.5 font-semibold tracking-tight">
+                    {tool.name}
+                    <ArrowRightIcon
+                      size={15}
+                      weight="bold"
+                      className="-translate-x-1 opacity-0 transition-all group-hover:translate-x-0 group-hover:opacity-100"
+                    />
+                  </div>
+                  <p className="mt-1 text-sm text-muted-foreground">{tool.tagline}</p>
+                </div>
+              </Link>
+            );
+          })}
         </div>
-      </main>
+      </section>
+
+      {/* Trust strip: divided row, not feature cards */}
+      <section className="mx-auto max-w-6xl px-4 pb-20 sm:px-6">
+        <div className="grid divide-y divide-border rounded-xl border border-border bg-card/40 sm:grid-cols-3 sm:divide-x sm:divide-y-0">
+          <TrustItem
+            icon={<ShieldCheckIcon size={20} weight="duotone" />}
+            title="Private by design"
+            body="Every value is generated on your device. No network requests, no logging."
+          />
+          <TrustItem
+            icon={<LightningIcon size={20} weight="duotone" />}
+            title="Cryptographically strong"
+            body="Backed by crypto.getRandomValues with unbiased sampling throughout."
+          />
+          <TrustItem
+            icon={<DownloadSimpleIcon size={20} weight="duotone" />}
+            title="Copy or export"
+            body="Grab one value, copy the batch, or download up to 100 as CSV or JSON."
+          />
+        </div>
+      </section>
+    </div>
+  );
+}
+
+function TrustItem({
+  icon,
+  title,
+  body,
+}: {
+  icon: React.ReactNode;
+  title: string;
+  body: string;
+}) {
+  return (
+    <div className="flex flex-col gap-2 p-6">
+      <span className="text-primary">{icon}</span>
+      <h3 className="font-medium tracking-tight">{title}</h3>
+      <p className="text-sm leading-relaxed text-muted-foreground">{body}</p>
     </div>
   );
 }
