@@ -6,6 +6,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { Navbar } from "@/components/navbar";
 import { Footer } from "@/components/footer";
 import { Toaster } from "@/components/ui/sonner";
+import { Analytics } from "@vercel/analytics/next";
 
 const geistSans = Geist({
   variable: "--font-sans",
@@ -53,6 +54,7 @@ export default function RootLayout({
             </div>
             <Toaster />
           </TooltipProvider>
+          <Analytics />
         </ThemeProvider>
       </body>
     </html>
