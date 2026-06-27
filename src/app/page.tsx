@@ -6,7 +6,28 @@ import {
   DownloadSimpleIcon,
 } from "@phosphor-icons/react/dist/ssr";
 import { Button } from "@/components/ui/button";
+import { JsonLd } from "@/components/json-ld";
 import { TOOLS } from "@/lib/tools";
+import { SITE_URL, SITE_NAME, SITE_DESCRIPTION } from "@/lib/site";
+
+const websiteSchema = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  name: SITE_NAME,
+  url: SITE_URL,
+  description: SITE_DESCRIPTION,
+};
+
+const toolListSchema = {
+  "@context": "https://schema.org",
+  "@type": "ItemList",
+  itemListElement: TOOLS.map((tool, i) => ({
+    "@type": "ListItem",
+    position: i + 1,
+    name: tool.name,
+    url: `${SITE_URL}${tool.href}`,
+  })),
+};
 
 const SAMPLES: { label: string; value: string }[] = [
   { label: "UUID v4", value: "9f1c2e7a-4b8d-4c1e-9a2f-7d6e5b4c3a21" },
@@ -19,6 +40,7 @@ const SAMPLES: { label: string; value: string }[] = [
 export default function Home() {
   return (
     <div>
+      <JsonLd data={[websiteSchema, toolListSchema]} />
       {/* Hero: asymmetric split, copy left, real sample output right */}
       <section className="bg-grid">
         <div className="mx-auto grid max-w-6xl items-center gap-12 px-4 py-16 sm:px-6 lg:grid-cols-2 lg:py-24">

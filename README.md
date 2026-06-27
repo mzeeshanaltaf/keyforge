@@ -38,6 +38,13 @@ npm install
 npm run dev      # http://localhost:3000
 ```
 
+### Environment
+
+Set `NEXT_PUBLIC_SITE_URL` to your canonical origin (e.g. `https://keyforge.example.com`)
+so the sitemap, canonical tags, Open Graph, and JSON-LD resolve to the right domain.
+On Vercel it falls back to the auto `VERCEL_PROJECT_PRODUCTION_URL`, and to
+`http://localhost:3000` in local dev. Required when you use a custom domain.
+
 ### Scripts
 
 | Command            | Description                          |
@@ -54,15 +61,18 @@ npm run dev      # http://localhost:3000
 ```
 src/
 ├── app/                      # Routes: /, /uuid, /guid, /password, /api-key
+│                             # + sitemap, robots, manifest, opengraph-image
 ├── components/
 │   ├── tools/                # The four tool panels + their ssr:false islands
 │   ├── ui/                   # shadcn/ui primitives
-│   └── *.tsx                 # Shared shell, output list, entropy meter, nav, etc.
+│   └── *.tsx                 # Shared shell, output list, entropy meter, nav, json-ld
 └── lib/
     ├── generators/           # uuid, guid, password, apiKey (pure functions)
     ├── random.ts             # Secure randomness helpers (rejection sampling)
     ├── entropy.ts            # Entropy math + strength buckets
-    └── export.ts             # CSV / JSON / clipboard / download
+    ├── export.ts             # CSV / JSON / clipboard / download
+    ├── site.ts               # Canonical site URL + metadata constants
+    └── structured-data.ts    # JSON-LD builders (WebApplication, FAQPage)
 ```
 
 ## How it works
