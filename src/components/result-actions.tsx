@@ -25,10 +25,14 @@ export function ResultActions({
   const disabled = values.length === 0;
 
   async function handleCopyAll() {
-    await copyToClipboard(values.join("\n"));
-    toast.success(
-      `Copied ${values.length} ${values.length === 1 ? "value" : "values"}`,
-    );
+    try {
+      await copyToClipboard(values.join("\n"));
+      toast.success(
+        `Copied ${values.length} ${values.length === 1 ? "value" : "values"}`,
+      );
+    } catch {
+      toast.error("Could not copy to clipboard");
+    }
   }
 
   function handleDownload(kind: "csv" | "json") {

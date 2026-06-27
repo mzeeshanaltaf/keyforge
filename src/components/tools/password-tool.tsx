@@ -31,6 +31,7 @@ export function PasswordTool() {
   const [values, setValues] = useState<string[]>(() =>
     Array.from({ length: 5 }, () => generatePassword(DEFAULT_PASSWORD_OPTIONS)),
   );
+  const [stale, setStale] = useState(false);
 
   const hasClass = opts.lower || opts.upper || opts.digits || opts.symbols;
   const bits = useMemo(
@@ -41,10 +42,13 @@ export function PasswordTool() {
   const generate = useCallback(() => {
     if (!hasClass) return;
     setValues(Array.from({ length: count }, () => generatePassword(opts)));
+    setStale(false);
   }, [count, opts, hasClass]);
 
-  const set = <K extends keyof PasswordOptions>(key: K, value: PasswordOptions[K]) =>
+  const set = <K extends keyof PasswordOptions>(key: K, value: PasswordOptions[K]) => {
     setOpts((o) => ({ ...o, [key]: value }));
+    setStale(true);
+  };
 
   const controls = (
     <div className="grid gap-5">
@@ -60,7 +64,7 @@ export function PasswordTool() {
           aria-label="Password length"
           value={[opts.length]}
           min={10}
-          max={50}
+          max={64}
           step={1}
           onValueChange={(v) => set("length", Array.isArray(v) ? v[0] : v)}
         />
@@ -99,7 +103,13 @@ export function PasswordTool() {
         </p>
       )}
 
-      <BulkCount value={count} onChange={setCount} />
+      <BulkCount
+        value={count}
+        onChange={(v) => {
+          setCount(v);
+          setStale(true);
+        }}
+      />
 
       <Button onClick={generate} className="w-full" disabled={!hasClass}>
         <ArrowsClockwiseIcon weight="bold" />
@@ -115,6 +125,7 @@ export function PasswordTool() {
       filenameBase="passwords"
       columnHeader="password"
       emptyHint="Press Generate to create passwords."
+      stale={stale}
     />
   );
 }

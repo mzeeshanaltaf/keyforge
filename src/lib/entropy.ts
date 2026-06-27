@@ -29,7 +29,7 @@ export function strengthFromBits(bits: number): Strength {
   return { level, pct };
 }
 
-/** Format a bits value for display, e.g. 190.5 -> "190 bits". */
+/** Format a bits value for display, e.g. 190.4 -> "190 bits". */
 export function formatBits(bits: number): string {
   return `${Math.round(bits)} bits`;
 }

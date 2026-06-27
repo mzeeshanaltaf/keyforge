@@ -52,6 +52,11 @@ export function passwordAlphabetSize(o: PasswordOptions): number {
  * Generate a password guaranteeing at least one character from each selected
  * class, then filling and shuffling the remainder from the combined alphabet.
  * Returns "" when no character class is selected.
+ *
+ * Note: forcing one char per class makes the displayed `bitsOfEntropy`
+ * (length * log2(alphabet)) a slight upper bound on the true entropy, since the
+ * guaranteed positions are drawn from sub-alphabets rather than the full pool.
+ * The gap is a fraction of a bit for typical lengths.
  */
 export function generatePassword(o: PasswordOptions): string {
   const { classes, combined } = buildCharsets(o);

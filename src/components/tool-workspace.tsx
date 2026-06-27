@@ -12,6 +12,8 @@ interface ToolWorkspaceProps {
   filenameBase: string;
   columnHeader?: string;
   emptyHint?: string;
+  /** Whether the controls have changed since the displayed values were generated. */
+  stale?: boolean;
 }
 
 /**
@@ -26,6 +28,7 @@ export function ToolWorkspace({
   filenameBase,
   columnHeader,
   emptyHint,
+  stale,
 }: ToolWorkspaceProps) {
   const controlsRef = useRef<HTMLDivElement>(null);
   // Track the controls card height (it changes as options toggle) and apply it
@@ -58,6 +61,11 @@ export function ToolWorkspace({
             {values.length > 0
               ? `${values.length} ${values.length === 1 ? "result" : "results"}`
               : "Results"}
+            {stale && values.length > 0 && (
+              <span className="ml-2 font-normal text-muted-foreground/70">
+                · press Generate to update
+              </span>
+            )}
           </p>
           <ResultActions
             values={values}

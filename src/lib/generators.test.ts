@@ -1,4 +1,4 @@
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, vi } from "vitest";
 import { uuidV4, uuidV7, generateUuid } from "@/lib/generators/uuid";
 import { formatGuid } from "@/lib/generators/guid";
 import {
@@ -14,6 +14,7 @@ import {
 } from "@/lib/generators/apiKey";
 import { bitsOfEntropy, strengthFromBits } from "@/lib/entropy";
 import { toCSV, toJSON } from "@/lib/export";
+import { secureRandomInt } from "@/lib/random";
 
 const UUID_RE =
   /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/;
@@ -54,9 +55,64 @@ describe("uuid", () => {
     expect(a < b).toBe(true); // lexicographic order matches time order
   });
 
+  it("v7 values minted within a single millisecond stay monotonic", () => {
+    // Freeze the clock so every UUID shares a timestamp; only the embedded
+    // counter can keep them ordered.
+    const fixed = 1_700_000_000_000;
+    const spy = vi.spyOn(Date, "now").mockReturnValue(fixed);
+    try {
+      const batch = Array.from({ length: 100 }, uuidV7);
+      const sorted = [...batch].sort();
+      expect(batch).toEqual(sorted);
+      expect(new Set(batch).size).toBe(batch.length); // and all unique
+    } finally {
+      spy.mockRestore();
+    }
+  });
+
+  it("v4 falls back to the manual byte path when crypto.randomUUID is absent", () => {
+    const original = crypto.randomUUID;
+    // @ts-expect-error - force the fallback branch
+    crypto.randomUUID = undefined;
+    try {
+      for (let i = 0; i < 50; i++) {
+        const u = uuidV4();
+        expect(u).toMatch(UUID_RE);
+        expect(u[14]).toBe("4");
+        expect("89ab").toContain(u[19]);
+      }
+    } finally {
+      crypto.randomUUID = original;
+    }
+  });
+
   it("generateUuid dispatches on version", () => {
     expect(generateUuid("v4")[14]).toBe("4");
     expect(generateUuid("v7")[14]).toBe("7");
+  });
+});
+
+describe("secureRandomInt", () => {
+  it("returns 0 for max === 1 without consuming randomness", () => {
+    expect(secureRandomInt(1)).toBe(0);
+  });
+
+  it("rejects non-positive or non-integer max", () => {
+    expect(() => secureRandomInt(0)).toThrow();
+    expect(() => secureRandomInt(-3)).toThrow();
+    expect(() => secureRandomInt(2.5)).toThrow();
+  });
+
+  it("stays in range and covers every bucket for a non-power-of-two max", () => {
+    const max = 62; // exercises the rejection-sampling path
+    const seen = new Set<number>();
+    for (let i = 0; i < 62_000; i++) {
+      const v = secureRandomInt(max);
+      expect(v).toBeGreaterThanOrEqual(0);
+      expect(v).toBeLessThan(max);
+      seen.add(v);
+    }
+    expect(seen.size).toBe(max); // all values reachable, none clipped
   });
 });
 
@@ -190,7 +246,8 @@ describe("export", () => {
 
   it("builds CSV with a header and escapes special characters", () => {
     const csv = toCSV(['has,comma', 'has"quote'], "value");
-    const lines = csv.split("\r\n");
+    expect(csv.startsWith("﻿")).toBe(true); // UTF-8 BOM for Excel
+    const lines = csv.slice(1).split("\r\n");
     expect(lines[0]).toBe("index,value");
     expect(lines[1]).toBe('1,"has,comma"');
     expect(lines[2]).toBe('2,"has""quote"');

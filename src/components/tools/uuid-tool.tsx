@@ -17,16 +17,24 @@ export function UuidTool() {
   const [values, setValues] = useState<string[]>(() =>
     Array.from({ length: 5 }, () => generateUuid("v4")),
   );
+  const [stale, setStale] = useState(false);
 
   const generate = useCallback(() => {
     setValues(Array.from({ length: count }, () => generateUuid(version)));
+    setStale(false);
   }, [count, version]);
 
   const controls = (
     <div className="grid gap-5">
       <div className="grid gap-2">
         <Label>Version</Label>
-        <Tabs value={version} onValueChange={(v) => setVersion(v as UuidVersion)}>
+        <Tabs
+          value={version}
+          onValueChange={(v) => {
+            setVersion(v as UuidVersion);
+            setStale(true);
+          }}
+        >
           <TabsList className="w-full">
             <TabsTrigger value="v4" className="flex-1">UUID v4</TabsTrigger>
             <TabsTrigger value="v7" className="flex-1">UUID v7</TabsTrigger>
@@ -39,7 +47,13 @@ export function UuidTool() {
         </p>
       </div>
 
-      <BulkCount value={count} onChange={setCount} />
+      <BulkCount
+        value={count}
+        onChange={(v) => {
+          setCount(v);
+          setStale(true);
+        }}
+      />
 
       <Button onClick={generate} className="w-full">
         <ArrowsClockwiseIcon weight="bold" />
@@ -55,6 +69,7 @@ export function UuidTool() {
       filenameBase="uuids"
       columnHeader="uuid"
       emptyHint="Press Generate to create UUIDs."
+      stale={stale}
     />
   );
 }

@@ -15,10 +15,14 @@ const OutputRow = memo(function OutputRow({ index, value }: OutputRowProps) {
   const [copied, setCopied] = useState(false);
 
   async function handleCopy() {
-    await copyToClipboard(value);
-    setCopied(true);
-    toast.success("Copied to clipboard");
-    window.setTimeout(() => setCopied(false), 1200);
+    try {
+      await copyToClipboard(value);
+      setCopied(true);
+      toast.success("Copied to clipboard");
+      window.setTimeout(() => setCopied(false), 1200);
+    } catch {
+      toast.error("Could not copy to clipboard");
+    }
   }
 
   return (

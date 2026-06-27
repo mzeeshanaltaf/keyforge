@@ -57,13 +57,17 @@ export function GuidTool() {
       generateGuid({ uppercase: true, hyphens: true, wrapper: "braces" }),
     ),
   );
+  const [stale, setStale] = useState(false);
 
   const generate = useCallback(() => {
     setValues(Array.from({ length: count }, () => generateGuid(opts)));
+    setStale(false);
   }, [count, opts]);
 
-  const set = <K extends keyof GuidFormatOptions>(key: K, value: GuidFormatOptions[K]) =>
+  const set = <K extends keyof GuidFormatOptions>(key: K, value: GuidFormatOptions[K]) => {
     setOpts((o) => ({ ...o, [key]: value }));
+    setStale(true);
+  };
 
   const controls = (
     <div className="grid gap-5">
@@ -98,7 +102,13 @@ export function GuidTool() {
         </Select>
       </div>
 
-      <BulkCount value={count} onChange={setCount} />
+      <BulkCount
+        value={count}
+        onChange={(v) => {
+          setCount(v);
+          setStale(true);
+        }}
+      />
 
       <Button onClick={generate} className="w-full">
         <ArrowsClockwiseIcon weight="bold" />
@@ -114,6 +124,7 @@ export function GuidTool() {
       filenameBase="guids"
       columnHeader="guid"
       emptyHint="Press Generate to create GUIDs."
+      stale={stale}
     />
   );
 }

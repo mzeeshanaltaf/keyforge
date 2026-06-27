@@ -32,8 +32,9 @@ export function EntropyMeter({ bits }: { bits: number }) {
       <div
         className="h-2 overflow-hidden rounded-full bg-muted"
         role="meter"
-        aria-valuenow={Math.round(bits)}
+        aria-valuenow={Math.min(128, Math.round(bits))}
         aria-valuemin={0}
+        aria-valuemax={128}
         aria-label="Password entropy"
       >
         <div

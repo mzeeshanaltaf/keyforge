@@ -39,5 +39,5 @@ export function generateApiKey(o: ApiKeyOptions): string {
   const pool = CHARSETS[o.charset];
   let body = "";
   for (let i = 0; i < o.length; i++) body += pickChar(pool);
-  return o.prefix ? `${o.prefix}${body}` : body;
+  return o.prefix + body;
 }

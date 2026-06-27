@@ -4,15 +4,19 @@ export function toJSON(values: string[], key = "value"): string {
   return JSON.stringify(rows, null, 2);
 }
 
-/** Serialize generated values to CSV with an index column. RFC-4180 escaping. */
+/**
+ * Serialize generated values to CSV with an index column. RFC-4180 escaping,
+ * CRLF line endings, and a leading UTF-8 BOM so Excel decodes symbols correctly.
+ */
 export function toCSV(values: string[], header = "value"): string {
   const escape = (s: string) =>
     /[",\n\r]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
+  const BOM = "﻿";
   const lines = [
     `index,${escape(header)}`,
     ...values.map((v, i) => `${i + 1},${escape(v)}`),
   ];
-  return lines.join("\r\n");
+  return BOM + lines.join("\r\n");
 }
 
 /** Trigger a client-side file download for the given text content. */

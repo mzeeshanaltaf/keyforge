@@ -20,8 +20,12 @@ export function secureRandomInt(max: number): number {
     throw new Error("max must be a positive integer");
   }
   if (max === 1) return 0;
-  // Largest multiple of `max` that fits in a uint32; reject values above it.
-  const limit = Math.floor(0xffffffff / max) * max;
+  // `getRandomValues` yields 2^32 distinct uint32 values (0 .. 2^32 - 1), so the
+  // population size is 0x100000000, not the max value 0xffffffff. Reject any draw
+  // at or above the largest multiple of `max` that fits, leaving a window evenly
+  // divisible by `max` so `x % max` is unbiased.
+  const RANGE = 0x100000000; // 2^32
+  const limit = Math.floor(RANGE / max) * max;
   const buf = new Uint32Array(1);
   let x = 0;
   do {

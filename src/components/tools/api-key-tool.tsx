@@ -34,6 +34,7 @@ export function ApiKeyTool() {
   const [values, setValues] = useState<string[]>(() =>
     Array.from({ length: 5 }, () => generateApiKey(DEFAULT_API_KEY_OPTIONS)),
   );
+  const [stale, setStale] = useState(false);
 
   const bits = useMemo(
     () => bitsOfEntropy(opts.length, apiKeyAlphabetSize(opts.charset)),
@@ -42,10 +43,13 @@ export function ApiKeyTool() {
 
   const generate = useCallback(() => {
     setValues(Array.from({ length: count }, () => generateApiKey(opts)));
+    setStale(false);
   }, [count, opts]);
 
-  const set = <K extends keyof ApiKeyOptions>(key: K, value: ApiKeyOptions[K]) =>
+  const set = <K extends keyof ApiKeyOptions>(key: K, value: ApiKeyOptions[K]) => {
     setOpts((o) => ({ ...o, [key]: value }));
+    setStale(true);
+  };
 
   const controls = (
     <div className="grid gap-5">
@@ -104,7 +108,13 @@ export function ApiKeyTool() {
       <Separator />
       <EntropyMeter bits={bits} />
 
-      <BulkCount value={count} onChange={setCount} />
+      <BulkCount
+        value={count}
+        onChange={(v) => {
+          setCount(v);
+          setStale(true);
+        }}
+      />
 
       <Button onClick={generate} className="w-full">
         <ArrowsClockwiseIcon weight="bold" />
@@ -120,6 +130,7 @@ export function ApiKeyTool() {
       filenameBase="api-keys"
       columnHeader="api_key"
       emptyHint="Press Generate to create API keys."
+      stale={stale}
     />
   );
 }
