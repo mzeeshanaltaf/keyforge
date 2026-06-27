@@ -23,5 +23,10 @@ export const SITE_URL = resolveSiteUrl();
 
 export const SITE_NAME = "Keyforge";
 
+/** Meta description for <head>. Kept under ~155 chars to avoid SERP truncation. */
 export const SITE_DESCRIPTION =
-  "Generate UUIDs (v4/v7), GUIDs, strong passwords, and API keys in your browser. Bulk generation, entropy readouts, and CSV/JSON export. Nothing leaves your device.";
+  "Generate UUIDs (v4/v7), GUIDs, passwords, and API keys in your browser. Bulk output, entropy readouts, CSV/JSON export. Nothing leaves your device.";
+
+/** Shorter copy for social cards (Open Graph / Twitter), which truncate ~125 chars. */
+export const SITE_DESCRIPTION_SHORT =
+  "Generate UUIDs, GUIDs, strong passwords, and API keys in your browser. Nothing leaves your device.";

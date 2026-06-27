@@ -7,7 +7,12 @@ import { Navbar } from "@/components/navbar";
 import { Footer } from "@/components/footer";
 import { Toaster } from "@/components/ui/sonner";
 import { Analytics } from "@vercel/analytics/next";
-import { SITE_URL, SITE_NAME, SITE_DESCRIPTION } from "@/lib/site";
+import {
+  SITE_URL,
+  SITE_NAME,
+  SITE_DESCRIPTION,
+  SITE_DESCRIPTION_SHORT,
+} from "@/lib/site";
 
 const geistSans = Geist({
   variable: "--font-sans",
@@ -36,12 +41,12 @@ export const metadata: Metadata = {
     locale: "en_US",
     url: SITE_URL,
     title: "Keyforge - UUID, GUID, Password & API Key Generator",
-    description: SITE_DESCRIPTION,
+    description: SITE_DESCRIPTION_SHORT,
   },
   twitter: {
     card: "summary_large_image",
     title: "Keyforge - UUID, GUID, Password & API Key Generator",
-    description: SITE_DESCRIPTION,
+    description: SITE_DESCRIPTION_SHORT,
   },
 };
 
