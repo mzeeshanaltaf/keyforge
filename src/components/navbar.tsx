@@ -39,6 +39,18 @@ export function Navbar() {
               </Link>
             );
           })}
+          <Link
+            href="/contact"
+            aria-current={pathname === "/contact" ? "page" : undefined}
+            className={cn(
+              "rounded-md px-3 py-1.5 text-sm font-medium transition-colors",
+              pathname === "/contact"
+                ? "bg-accent text-accent-foreground"
+                : "text-muted-foreground hover:text-foreground hover:bg-muted",
+            )}
+          >
+            Contact
+          </Link>
         </div>
 
         <div className="flex items-center">

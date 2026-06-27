@@ -19,5 +19,20 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.8,
   }));
 
-  return [home, ...toolPages];
+  const staticPages: MetadataRoute.Sitemap = [
+    {
+      url: `${SITE_URL}/contact`,
+      lastModified,
+      changeFrequency: "yearly",
+      priority: 0.5,
+    },
+    {
+      url: `${SITE_URL}/privacy`,
+      lastModified,
+      changeFrequency: "yearly",
+      priority: 0.3,
+    },
+  ];
+
+  return [home, ...toolPages, ...staticPages];
 }

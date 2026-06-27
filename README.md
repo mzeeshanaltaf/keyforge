@@ -20,6 +20,8 @@ ever sent to a server.
   or download as **CSV** or **JSON**.
 - **Private by design** — generation uses `crypto.getRandomValues` with unbiased
   (rejection-sampled) selection. No network requests, no logging.
+- **Contact / feedback** — a `/contact` form (honeypot + per-IP rate limiting) that posts
+  to an n8n webhook, plus a `/privacy` policy page.
 - Dark / light mode, keyboard-friendly controls, and a responsive layout.
 
 ## Tech stack
@@ -45,6 +47,11 @@ so the sitemap, canonical tags, Open Graph, and JSON-LD resolve to the right dom
 On Vercel it falls back to the auto `VERCEL_PROJECT_PRODUCTION_URL`, and to
 `http://localhost:3000` in local dev. Required when you use a custom domain.
 
+The contact form needs four server-only vars (see [`.env.example`](.env.example)):
+`N8N_CONTACT_WEBHOOK_URL` and `N8N_API_KEY` for webhook delivery, and
+`UPSTASH_REDIS_REST_URL` / `UPSTASH_REDIS_REST_TOKEN` for per-IP rate limiting (it fails
+open if these are unset). None are `NEXT_PUBLIC_`; set them in your host for production.
+
 ### Scripts
 
 | Command            | Description                          |
@@ -60,10 +67,12 @@ On Vercel it falls back to the auto `VERCEL_PROJECT_PRODUCTION_URL`, and to
 
 ```
 src/
-├── app/                      # Routes: /, /uuid, /guid, /password, /api-key
+├── app/                      # Routes: /, /uuid, /guid, /password, /api-key,
+│                             # /contact, /privacy, /api/contact
 │                             # + sitemap, robots, manifest, opengraph-image
 ├── components/
 │   ├── tools/                # The four tool panels + their ssr:false islands
+│   ├── contact/              # Contact form (progressive enhancement)
 │   ├── ui/                   # shadcn/ui primitives
 │   └── *.tsx                 # Shared shell, output list, entropy meter, nav, json-ld
 └── lib/
@@ -71,6 +80,7 @@ src/
     ├── random.ts             # Secure randomness helpers (rejection sampling)
     ├── entropy.ts            # Entropy math + strength buckets
     ├── export.ts             # CSV / JSON / clipboard / download
+    ├── rate-limit.ts         # Upstash sliding-window limiter (contact form)
     ├── site.ts               # Canonical site URL + metadata constants
     └── structured-data.ts    # JSON-LD builders (WebApplication, FAQPage)
 ```
