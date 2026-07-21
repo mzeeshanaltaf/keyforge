@@ -4,7 +4,11 @@ import { InfoSection } from "@/components/info-section";
 import { GuidToolIsland } from "@/components/tools/guid-tool-island";
 import { JsonLd } from "@/components/json-ld";
 import { TOOLS } from "@/lib/tools";
-import { toolApplicationSchema, faqSchema } from "@/lib/structured-data";
+import {
+  toolApplicationSchema,
+  faqSchema,
+  breadcrumbSchema,
+} from "@/lib/structured-data";
 
 const tool = TOOLS.find((t) => t.slug === "guid")!;
 
@@ -46,7 +50,11 @@ export default function GuidPage() {
   return (
     <GeneratorShell icon={tool.icon} title={tool.name} description={tool.tagline}>
       <JsonLd
-        data={[toolApplicationSchema(tool, description), faqSchema(FAQS)]}
+        data={[
+          toolApplicationSchema(tool, description),
+          breadcrumbSchema(tool),
+          faqSchema(FAQS),
+        ]}
       />
       <GuidToolIsland />
 

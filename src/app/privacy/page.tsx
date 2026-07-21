@@ -66,10 +66,11 @@ export default function PrivacyPage() {
 
         <Section title="Analytics">
           <p>
-            We use <strong>Vercel Web Analytics</strong> to understand aggregate, anonymous
-            usage such as page views. It does not use cookies and does not collect
-            personally identifiable information or track you across other sites. The
-            values you generate are never included in any analytics event.
+            We use <strong>Umami</strong>, a privacy-first, self-hosted analytics tool, to
+            understand aggregate, anonymous usage such as page views. It does not use
+            cookies and does not collect personally identifiable information or track you
+            across other sites. The values you generate are never included in any analytics
+            event.
           </p>
         </Section>
 
@@ -83,13 +84,10 @@ export default function PrivacyPage() {
 
         <Section title="Hosting">
           <p>
-            The site is hosted on Vercel. As with any website, the hosting provider may
-            process standard request metadata (such as IP address and user agent) to serve
-            pages and protect the service. See the{" "}
-            <a href="https://vercel.com/legal/privacy-policy" target="_blank" rel="noreferrer">
-              Vercel Privacy Policy
-            </a>{" "}
-            for details.
+            The site is self-hosted on a private virtual server. As with any website, the
+            hosting infrastructure may process standard request metadata (such as IP address
+            and user agent) to serve pages and protect the service. This metadata is not used
+            to build a profile of you or shared for marketing.
           </p>
         </Section>
 

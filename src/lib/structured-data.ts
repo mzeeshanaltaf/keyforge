@@ -34,6 +34,45 @@ export function toolApplicationSchema(tool: ToolMeta, description: string) {
   };
 }
 
+/**
+ * Organization schema for the site publisher. Includes the logo so search
+ * engines can associate the brand mark, and `sameAs` for known profiles.
+ */
+export function organizationSchema() {
+  return {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    name: SITE_NAME,
+    url: SITE_URL,
+    logo: `${SITE_URL}/icon.svg`,
+  };
+}
+
+/**
+ * BreadcrumbList schema for a tool page: Home -> Tool. Earns breadcrumb
+ * display in search results and clarifies the site hierarchy for crawlers.
+ */
+export function breadcrumbSchema(tool: ToolMeta) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      {
+        "@type": "ListItem",
+        position: 1,
+        name: "Home",
+        item: SITE_URL,
+      },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: tool.name,
+        item: `${SITE_URL}${tool.href}`,
+      },
+    ],
+  };
+}
+
 /** FAQPage schema built from a tool page's question/answer content. */
 export function faqSchema(faqs: Faq[]) {
   return {

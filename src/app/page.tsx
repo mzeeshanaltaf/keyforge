@@ -7,6 +7,7 @@ import {
 } from "@phosphor-icons/react/dist/ssr";
 import { Button } from "@/components/ui/button";
 import { JsonLd } from "@/components/json-ld";
+import { organizationSchema } from "@/lib/structured-data";
 import { TOOLS } from "@/lib/tools";
 import { SITE_URL, SITE_NAME, SITE_DESCRIPTION } from "@/lib/site";
 
@@ -16,6 +17,11 @@ const websiteSchema = {
   name: SITE_NAME,
   url: SITE_URL,
   description: SITE_DESCRIPTION,
+  publisher: {
+    "@type": "Organization",
+    name: SITE_NAME,
+    url: SITE_URL,
+  },
 };
 
 const toolListSchema = {
@@ -40,7 +46,7 @@ const SAMPLES: { label: string; value: string }[] = [
 export default function Home() {
   return (
     <div>
-      <JsonLd data={[websiteSchema, toolListSchema]} />
+      <JsonLd data={[websiteSchema, organizationSchema(), toolListSchema]} />
       {/* Hero: asymmetric split, copy left, real sample output right */}
       <section className="bg-grid">
         <div className="mx-auto grid max-w-6xl items-center gap-12 px-4 py-16 sm:px-6 lg:grid-cols-2 lg:py-24">
